@@ -4,7 +4,7 @@
      "processor": "sysflowreader",
      "handler": "flattener",
      "in": "sysflow sysflowchan",
-     "out": "flat flattenerchan",
+     "out": ["flat flattenerchan", "flatraw flattenerchan"],
      "filter.enabled": "on"
     },
     {
@@ -15,14 +15,34 @@
      "mode": "alert"
     },
     {
+     "processor": "policyengine",
+     "in": "flatraw flattenerchan",
+     "out": "evtraw eventchan",
+     "mode": "bypass"
+    },
+    {
      "processor": "exporter",
      "in": "evt eventchan",
-     "export": "syslog",
-     "format": "json",
-     "syslog.proto": "tcp",
-     "syslog.tag": "sysflow",
-     "syslog.host": "overridden from environment",
-     "syslog.port": "overridden from environment"
+     "export": "es",
+     "format": "ecs",
+     "es.addresses": "https://[IPADDRESS]:9200",
+     "es.index": "sysflow-alerts",
+     "es.username": "elastic",
+     "es.password": "Cp27EkknU2sR_ohekG52",
+     "es.bulk.numWorkers": "1",
+     "buffer": "50"
+    },
+    {
+     "processor": "exporter",
+     "in": "evtraw eventchan",
+     "export": "es",
+     "format": "ecs",
+     "es.addresses": "https://[IPADDRESS]:9200",
+     "es.index": "sysflow-events",
+     "es.username": "elastic",
+     "es.password": "Cp27EkknU2sR_ohekG52",
+     "es.bulk.numWorkers": "1",
+     "buffer": "1000"
     }
   ]
 }

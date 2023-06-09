@@ -111,7 +111,7 @@ sfcollector:
   # "/lib/",  "/lib64/", "/usr/lib/", "/usr/lib64/"
   readMode: "2"
   # enables ebpf probe (required for minikube)
-  ebpf: false
+  ebpf: true
   # mounts /etc directory in container (required for minikube and Google COS)
   mountEtc: true
   # directory where traces are written inside container
@@ -133,9 +133,9 @@ sfprocessor:
   # Image tag
   tag: latest
   #Override processor exporter in pipeline.json
-  override: true
+  override: false
   # Export type (terminal|file|syslog)
-  export: syslog
+  export: es
   # rsyslog host address
   syslogHost: localhost
   # rsyslog port
